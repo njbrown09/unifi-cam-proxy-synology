@@ -37,6 +37,8 @@ RUN apk add --update ffmpeg netcat-openbsd libusb-dev
 # Add the environment variables
 ENV HOST="YOUR NVR ADDRESS" \
     TOKEN="YOUR TOKEN" \
+    UNIFI_EMAIL="" \
+    UNIFI_PASSWORD="" \
     RTSP_URL="YOUR RTSP URL" \
     CERT="PATH TO CERT"
 
