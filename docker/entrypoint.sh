@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define the path for the certificate
-CERT_PATH="/unifi/certs/client.pem"
+CERT_PATH="/unifi/client.pem"
 
 # Check if client.pem exists at the designated path, if not, create it
 if [ ! -f "${CERT_PATH}" ]; then
