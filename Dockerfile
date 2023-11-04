@@ -40,7 +40,7 @@ ENV HOST="YOUR NVR ADDRESS" \
     UNIFI_EMAIL="" \
     UNIFI_PASSWORD="" \
     CAMERA_MODEL="UVC G4 Pro" \
-    RTSP_URL="YOUR RTSP URL" \
+    RTSP_URL="YOUR RTSP URL"
 
 COPY . .
 RUN pip install . --no-cache-dir
