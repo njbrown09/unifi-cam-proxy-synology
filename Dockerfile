@@ -36,9 +36,10 @@ RUN apk add --update ffmpeg netcat-openbsd libusb-dev
 
 # Add the environment variables
 ENV HOST="YOUR NVR ADDRESS" \
-    TOKEN="YOUR TOKEN" \
+    TOKEN="" \
     UNIFI_EMAIL="" \
     UNIFI_PASSWORD="" \
+    CAMERA_MODEL="UVC G4 Pro" \
     RTSP_URL="YOUR RTSP URL" \
 
 COPY . .
