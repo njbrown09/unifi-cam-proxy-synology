@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define the path for the certificate
-CERT_PATH="/unifi/client.pem"
+CERT_PATH="/unifi/certs/client.pem"
 
 # Check if client.pem exists at the designated path, if not, create it
 if [ ! -f "${CERT_PATH}" ]; then
@@ -15,16 +15,22 @@ else
   echo "client.pem already exists at ${CERT_PATH}, using existing certificate."
 fi
 
-# Check if the required variables are set and if TOKEN is set while UNIFI_EMAIL and UNIFI_PASSWORD are not
-if [ ! -z "${RTSP_URL:-}" ] && [ ! -z "${HOST}" ] && [ ! -z "${TOKEN}" ] && [ -z "${UNIFI_EMAIL}" ] && [ -z "${UNIFI_PASSWORD}" ]; then
-  echo "Using RTSP stream from $RTSP_URL with token authentication"
-  exec unifi-cam-proxy --host "$HOST" --name "${NAME:-unifi-cam-proxy}" --mac "${MAC:-AA:BB:CC:00:11:22}" --cert "${CERT_PATH}" --token "$TOKEN" rtsp -s "$RTSP_URL"
+# Check that CAMERA_MODEL is not blank
+if [ -z "${CAMERA_MODEL}" ]; then
+  echo "CAMERA_MODEL environment variable is not set. Exiting..."
+  exit 1
 fi
 
-# Check if the required variables are set and if UNIFI_EMAIL and UNIFI_PASSWORD are set while TOKEN is not
-if [ ! -z "${RTSP_URL:-}" ] && [ ! -z "${HOST}" ] && [ ! -z "${UNIFI_EMAIL}" ] && [ ! -z "${UNIFI_PASSWORD}" ] && [ -z "${TOKEN}" ]; then
+# Check if the required variables are set for token authentication
+if [ ! -z "${RTSP_URL}" ] && [ ! -z "${HOST}" ] && [ ! -z "${TOKEN}" ] && [ -z "${UNIFI_EMAIL}" ] && [ -z "${UNIFI_PASSWORD}" ]; then
+  echo "Using RTSP stream from $RTSP_URL with token authentication"
+  exec unifi-cam-proxy --host "$HOST" --name "${NAME:-unifi-cam-proxy}" --mac "${MAC:-AA:BB:CC:00:11:22}" --cert "${CERT_PATH}" --token "$TOKEN" --model "$CAMERA_MODEL" rtsp -s "$RTSP_URL"
+elif [ ! -z "${RTSP_URL}" ] && [ ! -z "${HOST}" ] && [ ! -z "${UNIFI_EMAIL}" ] && [ ! -z "${UNIFI_PASSWORD}" ] && [ -z "${TOKEN}" ]; then
   echo "Using RTSP stream from $RTSP_URL with NVR credentials"
-  exec unifi-cam-proxy --host "$HOST" --name "${NAME:-unifi-cam-proxy}" --mac "${MAC:-AA:BB:CC:00:11:22}" --cert "${CERT_PATH}" --nvr-username "$UNIFI_EMAIL" --nvr-password "$UNIFI_PASSWORD" rtsp -s "$RTSP_URL" --model "UVC G4 Pro"
+  exec unifi-cam-proxy --host "$HOST" --name "${NAME:-unifi-cam-proxy}" --mac "${MAC:-AA:BB:CC:00:11:22}" --cert "${CERT_PATH}" --nvr-username "$UNIFI_EMAIL" --nvr-password "$UNIFI_PASSWORD" --model "$CAMERA_MODEL" rtsp -s "$RTSP_URL"
+else
+  echo "Error: RTSP_URL, HOST, and either TOKEN or UNIFI_EMAIL and UNIFI_PASSWORD must be set. Exiting..."
+  exit 1
 fi
 
 exec "$@"
