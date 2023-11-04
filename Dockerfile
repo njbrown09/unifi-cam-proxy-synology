@@ -16,7 +16,7 @@ RUN apk add --update \
         musl-dev \
         patchelf \
         rust \
-        zlib-dev \
+        zlib-dev
 
 RUN pip install -U pip wheel setuptools maturin
 COPY requirements.txt .
