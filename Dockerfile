@@ -16,7 +16,7 @@ RUN apk add --update \
         musl-dev \
         patchelf \
         rust \
-        zlib-dev
+        zlib-dev \
 
 RUN pip install -U pip wheel setuptools maturin
 COPY requirements.txt .
@@ -32,7 +32,7 @@ COPY --from=builder \
         /usr/local/lib/python${version}/site-packages \
         /usr/local/lib/python${version}/site-packages
 
-RUN apk add --update ffmpeg netcat-openbsd libusb-dev
+RUN apk add --update ffmpeg netcat-openbsd libusb-dev openssl
 
 # Add the environment variables
 ENV HOST="YOUR NVR ADDRESS" \
