@@ -40,7 +40,6 @@ ENV HOST="YOUR NVR ADDRESS" \
     UNIFI_EMAIL="" \
     UNIFI_PASSWORD="" \
     RTSP_URL="YOUR RTSP URL" \
-    CERT="PATH TO CERT"
 
 COPY . .
 RUN pip install . --no-cache-dir
