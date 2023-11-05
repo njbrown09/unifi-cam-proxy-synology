@@ -27,7 +27,7 @@ if [ ! -z "${RTSP_URL}" ] && [ ! -z "${HOST}" ] && [ ! -z "${TOKEN}" ] && [ -z "
   exec unifi-cam-proxy --host "$HOST" --name "${NAME:-unifi-cam-proxy}" --mac "${MAC:-AA:BB:CC:00:11:22}" --cert "${CERT_PATH}" --token "$TOKEN" --model "$CAMERA_MODEL" rtsp -s "$RTSP_URL"
 elif [ ! -z "${RTSP_URL}" ] && [ ! -z "${HOST}" ] && [ ! -z "${UNIFI_EMAIL}" ] && [ ! -z "${UNIFI_PASSWORD}" ] && [ -z "${TOKEN}" ]; then
   echo "Using RTSP stream from $RTSP_URL with NVR credentials"
-  exec unifi-cam-proxy --host "$HOST" --name "${NAME:-unifi-cam-proxy}" --mac "${MAC:-AA:BB:CC:00:11:22}" --cert "${CERT_PATH}" --nvr-username "$UNIFI_EMAIL" --nvr-password "$UNIFI_PASSWORD" --model "$CAMERA_MODEL" rtsp -s "$RTSP_URL"
+  exec unifi-cam-proxy --host "$HOST" --name "${NAME:-unifi-cam-proxy}" --mac "${MAC:-AA:BB:CC:00:11:22}" --cert "${CERT_PATH}" --nvr-username "$UNIFI_EMAIL" --nvr-password "$UNIFI_PASSWORD" --model "$CAMERA_MODEL" rtsp -s "$RTSP_URL" --ffmpeg-args='-c:v copy -bsf:v "h264_metadata=tick_rate=30000/1001:fixed_frame_rate_flag=1" -ar 32000 -ac 1 -codec:a aac -b:a 32k'
 else
   echo "Error: RTSP_URL, HOST, and either TOKEN or UNIFI_EMAIL and UNIFI_PASSWORD must be set. Exiting..."
   exit 1
