@@ -18,7 +18,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=keshavdv/unifi-cam-proxy
+          DOCKER_IMAGE=njbrown09/unifi-cam-proxy-synology
           VERSION=dev
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/v}
