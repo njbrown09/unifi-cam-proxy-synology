@@ -1,5 +1,4 @@
 name: Build Docker image
-run: echo "Logging in with username ${{ secrets.DOCKERHUB_USERNAME }}"
 on:
   push:
     branches: main
@@ -11,6 +10,7 @@ on:
 jobs:
   buildx:
     runs-on: ubuntu-latest
+    environment: Dockerhub
 
     steps:
       - uses: actions/checkout@v3
