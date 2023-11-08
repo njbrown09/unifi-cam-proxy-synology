@@ -1,5 +1,5 @@
 name: Build Docker image
-
+run: echo "Logging in with username ${{ secrets.DOCKERHUB_USERNAME }}"
 on:
   push:
     branches: main
