@@ -673,7 +673,7 @@ class UnifiCamBase(metaclass=ABCMeta):
                 "defaultInterface": "eth0",
                 "dhcpLeasetime": 86400,
                 "dnsServer": "8.8.8.8 4.2.2.2",
-                "gateway": "192.168.103.1",
+                "gateway": "10.0.0.1",
                 "ipAddress": self.args.ip,
                 "linkDuplex": 1,
                 "linkSpeedMbps": 100,
