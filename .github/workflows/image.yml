@@ -52,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          platforms: linux/arm/v8
+          platforms: linux/arm64, linux/arm/v8
           push: true
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
