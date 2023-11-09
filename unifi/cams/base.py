@@ -681,6 +681,25 @@ class UnifiCamBase(metaclass=ABCMeta):
                 "networkMask": "255.255.255.0",
             },
         )
+        
+    async def process_system_status(self, msg: AVClientRequest) -> AVClientResponse:
+        return self.gen_response(
+            "NetworkStatus",
+            msg["messageId"],
+            {
+                "connectionState": 2,
+                "connectionStateDescription": "CONNECTED",
+                "defaultInterface": "eth0",
+                "dhcpLeasetime": 86400,
+                "dnsServer": "8.8.8.8 4.2.2.2",
+                "gateway": "10.0.0.1",
+                "ipAddress": self.args.ip,
+                "linkDuplex": 1,
+                "linkSpeedMbps": 100,
+                "mode": "dhcp",
+                "networkMask": "255.255.255.0",
+            },
+        )
 
     async def process_sound_led_settings(
         self, msg: AVClientRequest
@@ -870,6 +889,8 @@ class UnifiCamBase(metaclass=ABCMeta):
             res = await self.process_osd_settings(m)
         elif fn == "NetworkStatus":
             res = await self.process_network_status(m)
+        elif fn == "GetSystemStats":
+            res = await self.process_system_status(m)
         elif fn == "AnalyticsTest":
             res = self.gen_response("AnalyticsTest", response_to=m["messageId"])
         elif fn == "ChangeSoundLedSettings":
@@ -932,10 +953,11 @@ class UnifiCamBase(metaclass=ABCMeta):
                 f" {self.get_base_ffmpeg_args(stream_index)} -rtsp_transport"
                 f' {self.args.rtsp_transport} -i "{source}"'
                 f" {self.get_extra_ffmpeg_args(stream_index)} -metadata"
-                f" streamName={stream_name} -f flv - | {sys.executable} -m"
-                " unifi.clock_sync"
-                f" {'--write-timestamps' if self._needs_flv_timestamps else ''} | nc"
-                f" {destination[0]} {destination[1]}"
+                f" streamName={stream_name}"
+                " -c:v copy -vbsf \"h264_metadata=tick_rate=40000/1001:fixed_frame_rate_flag=1\" -fflags nobuffer -flags low_delay -ar 16000 -ac 1 -codec:a aac -b:a 16k -strict experimental -drop_pkts_on_overflow 1 -attempt_recovery 1"
+                " -recover_any_error 1 -use_wallclock_as_timestamps 1"
+                f" -f flv - | {sys.executable} -m unifi.clock_sync"
+                f" {'--write-timestamps' if self._needs_flv_timestamps else ''} | nc {destination[0]} {destination[1]}"
             )
 
             if is_dead:
