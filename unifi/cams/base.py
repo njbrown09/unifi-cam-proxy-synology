@@ -449,7 +449,7 @@ class UnifiCamBase(metaclass=ABCMeta):
                         "bitRateVbrMin": 48000,
                         "description": "Hi quality video track",
                         "enabled": True,
-                        "fps": 15,
+                        "fps": 30,
                         "gopModel": 0,
                         "height": 1080,
                         "horizontalFlip": False,
